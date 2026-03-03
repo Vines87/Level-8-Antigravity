@@ -1,5 +1,8 @@
 package com.zauberfluff.core.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class Symbol(val isPremium: Boolean) {
     // Free pool
     DRAGON(false),

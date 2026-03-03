@@ -12,6 +12,8 @@ import com.zauberfluff.core.domain.model.Mission
 import com.zauberfluff.core.domain.model.Player
 import com.zauberfluff.core.domain.usecase.GameCoreEngine
 import com.zauberfluff.core.domain.usecase.MissionValidator
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +28,7 @@ class GameViewModel(
 ) : ViewModel() {
 
     companion object {
-        private const val KEY_GAME_STARTED = "game_started_snapshot"
+        private const val KEY_GAME_STATE = "game_state_snapshot"
     }
 
     private val _gameState = MutableStateFlow(createInitialState())
@@ -36,15 +38,25 @@ class GameViewModel(
     val selectedCards: StateFlow<Set<String>> = _selectedCards.asStateFlow()
 
     init {
-        // SavedStateHandle recovery prep
+        restoreStateOrInitialize()
+        observeAndSaveState()
+    }
+
+    private fun restoreStateOrInitialize() {
+        val savedJson = savedStateHandle.get<String>(KEY_GAME_STATE)
+        if (savedJson != null) {
+            try {
+                _gameState.value = Json.decodeFromString<GameState>(savedJson)
+            } catch (e: Exception) {
+                // If parsing fails for any reason, use initial state fallback
+            }
+        }
+    }
+
+    private fun observeAndSaveState() {
         viewModelScope.launch {
-            val wasStarted = savedStateHandle.get<Boolean>(KEY_GAME_STARTED) ?: false
-            if (!wasStarted) {
-                // Initial Setup
-                savedStateHandle[KEY_GAME_STARTED] = true
-            } else {
-                // In a real scenario, we would restore the full GameState here 
-                // using a JSON serializer directly from savedStateHandle
+            _gameState.collect { state ->
+                savedStateHandle[KEY_GAME_STATE] = Json.encodeToString(state)
             }
         }
     }

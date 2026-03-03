@@ -1,5 +1,8 @@
 package com.zauberfluff.core.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class GameState(
     val players: List<Player>,
     val currentPlayerIndex: Int = 0,

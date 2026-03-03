@@ -1,7 +1,9 @@
 package com.zauberfluff.core.domain.model
 
 import java.util.UUID
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Mission(
     val type: MissionType,
     val isPremium: Boolean,
