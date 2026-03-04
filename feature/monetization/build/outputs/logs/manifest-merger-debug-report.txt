@@ -1,0 +1,16 @@
+-- Merging decision tree log ---
+manifest
+ADDED from K:\OneDrive\Codex\Level 8 Antigravity\feature\monetization\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest785121312728401081.xml:2:13-83
+INJECTED from K:\OneDrive\Codex\Level 8 Antigravity\feature\monetization\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest785121312728401081.xml:2:13-83
+	package
+		INJECTED from K:\OneDrive\Codex\Level 8 Antigravity\feature\monetization\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest785121312728401081.xml
+	xmlns:android
+		ADDED from K:\OneDrive\Codex\Level 8 Antigravity\feature\monetization\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest785121312728401081.xml:2:23-81
+uses-sdk
+INJECTED from K:\OneDrive\Codex\Level 8 Antigravity\feature\monetization\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest785121312728401081.xml reason: use-sdk injection requested
+INJECTED from K:\OneDrive\Codex\Level 8 Antigravity\feature\monetization\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest785121312728401081.xml
+INJECTED from K:\OneDrive\Codex\Level 8 Antigravity\feature\monetization\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest785121312728401081.xml
+	android:targetSdkVersion
+		INJECTED from K:\OneDrive\Codex\Level 8 Antigravity\feature\monetization\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest785121312728401081.xml
+	android:minSdkVersion
+		INJECTED from K:\OneDrive\Codex\Level 8 Antigravity\feature\monetization\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest785121312728401081.xml
