@@ -1,0 +1,19 @@
+.gradle/
+.idea/
+.kotlin/
+.DS_Store
+local.properties
+
+# Android/Gradle build outputs
+build/
+**/build/
+
+# Android Studio captures
+captures/
+
+# Native build outputs
+.cxx/
+**/.cxx/
+
+# IntelliJ module files
+*.iml
