@@ -12,7 +12,7 @@ data class Player(
     val score: Int = 0
 ) {
     companion object {
-        const val MAX_HAND_SIZE = 5
+        const val MAX_HAND_SIZE = 6
         const val WINNING_SCORE = 6
     }
 }

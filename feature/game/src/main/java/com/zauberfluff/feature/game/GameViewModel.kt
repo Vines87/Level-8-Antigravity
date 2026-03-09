@@ -43,6 +43,14 @@ class GameViewModel(
     private val _selectedCards = MutableStateFlow<Set<String>>(emptySet())
     val selectedCards: StateFlow<Set<String>> = _selectedCards.asStateFlow()
 
+    /** ID der zuletzt gezogenen Karte – triggert die Karten-Flug-Animation. Null = keine Animation. */
+    private val _lastDrawnCardId = MutableStateFlow<String?>(null)
+    val lastDrawnCardId: StateFlow<String?> = _lastDrawnCardId.asStateFlow()
+
+    /** Kurzes true-Signal, das das Missions-Feuerwerk (Bounce + Glitzer) auslöst. */
+    private val _missionFireworkTrigger = MutableStateFlow(false)
+    val missionFireworkTrigger: StateFlow<Boolean> = _missionFireworkTrigger.asStateFlow()
+
     init {
         restoreStateOrInitialize()
         observeAndSaveState()
@@ -75,7 +83,20 @@ class GameViewModel(
     fun drawCard() {
         _gameState.update { state ->
             val currentPlayer = state.players[state.currentPlayerIndex]
+            val handBefore = currentPlayer.hand.map { it.id }.toSet()
             val stateAfterDraw = gameEngine.drawCard(state, currentPlayer.id)
+
+            // Detect the newly added card and trigger the fly-in animation
+            val playerAfterDraw = stateAfterDraw.players.find { it.id == currentPlayer.id }
+            val newCardId = playerAfterDraw?.hand?.firstOrNull { it.id !in handBefore }?.id
+            if (newCardId != null) {
+                _lastDrawnCardId.value = newCardId
+                viewModelScope.launch {
+                    kotlinx.coroutines.delay(800)
+                    _lastDrawnCardId.value = null
+                }
+            }
+
             turnManager.advanceTurn(stateAfterDraw, aiStrategy)
         }
     }
@@ -94,15 +115,20 @@ class GameViewModel(
         _gameState.update { state ->
             val currentPlayer = state.players[state.currentPlayerIndex]
             val cardsToSubmit = currentPlayer.hand.filter { it.id in _selectedCards.value }
-            
+
             val newState = gameEngine.completeMission(state, currentPlayer.id, cardsToSubmit)
-            
-            // Clear selection if mission was successful (score increased)
+
+            // Clear selection and trigger firework if mission was successful (score increased)
             val newPlayer = newState.players.find { it.id == currentPlayer.id }
             if (newPlayer != null && newPlayer.score > currentPlayer.score) {
                 _selectedCards.value = emptySet()
+                _missionFireworkTrigger.value = true
+                viewModelScope.launch {
+                    kotlinx.coroutines.delay(700)
+                    _missionFireworkTrigger.value = false
+                }
             }
-            
+
             turnManager.advanceTurn(newState, aiStrategy)
         }
     }

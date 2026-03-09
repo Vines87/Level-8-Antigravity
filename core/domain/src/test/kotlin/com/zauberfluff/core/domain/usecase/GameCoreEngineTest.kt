@@ -67,8 +67,8 @@ class GameCoreEngineTest {
 
         // Mission complete reproducibility
         val handCards = listOf(Card(Symbol.DRAGON, id="1"), Card(Symbol.DRAGON, id="2"), Card(Symbol.DRAGON, id="3"))
-        val stateMiss1 = GameState(listOf(Player("p1", hand = handCards)), deck = emptyList(), activeMission = Mission(MissionType.THREE_SAME, false, 3))
-        val stateMiss2 = GameState(listOf(Player("p1", hand = handCards)), deck = emptyList(), activeMission = Mission(MissionType.THREE_SAME, false, 3))
+        val stateMiss1 = GameState(listOf(Player("p1", "Tester", hand = handCards)), deck = emptyList(), activeMission = Mission(MissionType.THREE_SAME, false, 3))
+        val stateMiss2 = GameState(listOf(Player("p1", "Tester", hand = handCards)), deck = emptyList(), activeMission = Mission(MissionType.THREE_SAME, false, 3))
 
         val endState1 = engine1.completeMission(stateMiss1, "p1", handCards)
         val endState2 = engine2.completeMission(stateMiss2, "p1", handCards)

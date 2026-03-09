@@ -1,7 +1,15 @@
 package com.zauberfluff.feature.game
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -11,18 +19,54 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.zauberfluff.core.domain.model.Card
 import com.zauberfluff.core.domain.model.GameState
 import com.zauberfluff.core.domain.model.Mission
-import com.zauberfluff.core.domain.model.Player
+import com.zauberfluff.core.domain.model.MissionType
+import com.zauberfluff.core.domain.model.Symbol
+import com.zauberfluff.core.ui.SymbolIcon
 import com.zauberfluff.core.ui.ZauberfluffAdaptiveLayout
 import com.zauberfluff.core.ui.pulseClickable
-import com.zauberfluff.core.domain.model.MissionType
+
+// ─── Display name helpers ────────────────────────────────────────────────────
+
+private fun MissionType.displayName(): String = when (this) {
+    MissionType.THREE_SAME      -> "3 gleiche Freunde"
+    MissionType.THREE_DIFFERENT -> "3 Verschiedene"
+    MissionType.FOUR_SAME       -> "4 gleiche Freunde"
+    MissionType.FOUR_DIFFERENT  -> "Bunte Mischung"
+}
+
+/**
+ * Returns candidate symbols the current player could use to fulfil [mission].
+ * For SAME missions:   up to [requiredCount] copies of the most-common symbol.
+ * For DIFFERENT missions: the [requiredCount] rarest/any symbols the player has.
+ */
+private fun playerCandidateSymbols(
+    handSymbols: List<Symbol>,
+    mission: Mission
+): List<Symbol> {
+    return when (mission.type) {
+        MissionType.THREE_SAME, MissionType.FOUR_SAME -> {
+            val grouped = handSymbols.groupBy { it }
+            val best = grouped.maxByOrNull { it.value.size } ?: return emptyList()
+            best.value.take(mission.requiredCount)
+        }
+        MissionType.THREE_DIFFERENT, MissionType.FOUR_DIFFERENT -> {
+            handSymbols.distinct().take(mission.requiredCount)
+        }
+    }
+}
+
+// ─── Screen entry point ──────────────────────────────────────────────────────
 
 @Composable
 fun GameScreen(
@@ -34,11 +78,13 @@ fun GameScreen(
 
     ZauberfluffAdaptiveLayout(
         windowSizeClass = windowSizeClass,
-        portraitLayout = { GameLayoutPortrait(gameState, selectedCards, viewModel) },
+        portraitLayout  = { GameLayoutPortrait(gameState, selectedCards, viewModel) },
         landscapeLayout = { GameLayoutLandscape(gameState, selectedCards, viewModel) },
-        tabletLayout = { GameLayoutTablet(gameState, selectedCards, viewModel) }
+        tabletLayout    = { GameLayoutTablet(gameState, selectedCards, viewModel) }
     )
 }
+
+// ─── Layout variants ─────────────────────────────────────────────────────────
 
 @Composable
 private fun GameLayoutPortrait(
@@ -55,7 +101,7 @@ private fun GameLayoutPortrait(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         TopBar(gameState)
-        MissionArea(gameState.activeMission)
+        MissionArea(gameState)
         HandArea(gameState, selectedCards, viewModel)
         ActionArea(viewModel)
     }
@@ -80,7 +126,7 @@ private fun GameLayoutLandscape(
         ) {
             TopBar(gameState)
             Spacer(modifier = Modifier.height(16.dp))
-            MissionArea(gameState.activeMission)
+            MissionArea(gameState)
         }
         Column(
             modifier = Modifier.weight(2f),
@@ -100,9 +146,10 @@ private fun GameLayoutTablet(
     selectedCards: Set<String>,
     viewModel: GameViewModel
 ) {
-    // Similar to landscape but with larger elements for kids usability
     GameLayoutLandscape(gameState, selectedCards, viewModel)
 }
+
+// ─── TopBar ──────────────────────────────────────────────────────────────────
 
 @Composable
 private fun TopBar(gameState: GameState) {
@@ -112,14 +159,14 @@ private fun TopBar(gameState: GameState) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "Score: ${currentPlayer?.score ?: 0}/6",
+            text = "⭐ ${currentPlayer?.score ?: 0} / 6",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF2C3E50)
         )
         if (gameState.isGameOver) {
             Text(
-                text = " Gewonnen!",
+                text = "🎉 Gewonnen!",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF27AE60)
@@ -128,35 +175,110 @@ private fun TopBar(gameState: GameState) {
     }
 }
 
+// ─── MissionArea — Sammel-Körbe ───────────────────────────────────────────────
+
 @Composable
-private fun MissionArea(mission: Mission?) {
+private fun MissionArea(gameState: GameState) {
+    val mission = gameState.activeMission
+    val currentPlayer = gameState.players.getOrNull(gameState.currentPlayerIndex)
+    val handSymbols = currentPlayer?.hand?.map { it.symbol } ?: emptyList()
+    val candidateSymbols = if (mission != null) playerCandidateSymbols(handSymbols, mission) else emptyList()
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF9C4))
+            .padding(vertical = 12.dp),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF9C4)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
-            modifier = Modifier.padding(24.dp),
+            modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 16.dp)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Mission title
             Text(
-                text = "Mission",
+                text = mission?.type?.displayName() ?: "Keine Mission",
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF6D4C41)
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = mission?.type?.name ?: "Keine",
-                fontSize = 18.sp
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Circular slots
+            val slotCount = mission?.requiredCount ?: 0
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                repeat(slotCount) { index ->
+                    val symbolForSlot = candidateSymbols.getOrNull(index)
+                    MissionSlot(symbol = symbolForSlot)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * One circular slot in the mission basket.
+ * @param symbol  When non-null the player has a card for this slot → lit up.
+ *                When null → dotted grey outline with dimmed silhouette.
+ */
+@Composable
+private fun MissionSlot(symbol: Symbol?) {
+    val slotSize = 64.dp
+
+    if (symbol != null) {
+        // Lit-up slot – glowing ring + coloured icon
+        val pulse by rememberInfiniteTransition(label = "slotPulse").animateFloat(
+            initialValue = 1.00f,
+            targetValue  = 1.06f,
+            animationSpec = infiniteRepeatable(
+                animation  = tween(600, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "slotScale"
+        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(slotSize)
+                .scale(pulse)
+                .clip(CircleShape)
+                .background(Color.White)
+                .border(width = 3.dp, color = Color(0xFFFFD54F), shape = CircleShape)
+        ) {
+            SymbolIcon(
+                symbol   = symbol,
+                modifier = Modifier.size(44.dp),
+                dimmed   = false
             )
-            Text(
-                text = "Sammle ${mission?.requiredCount ?: 0}",
-                fontSize = 16.sp
+        }
+    } else {
+        // Empty slot – dotted grey circle with invisible but sized placeholder
+        androidx.compose.foundation.Canvas(
+            modifier = Modifier.size(slotSize)
+        ) {
+            val strokeWidth = 4.dp.toPx()
+            val dashLen     = 8.dp.toPx()
+            val gapLen      = 6.dp.toPx()
+            drawCircle(
+                color = Color(0xFFBDBDBD),
+                radius = size.minDimension / 2f - strokeWidth / 2f,
+                style  = Stroke(
+                    width      = strokeWidth,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashLen, gapLen))
+                )
             )
         }
     }
 }
+
+// ─── HandArea ────────────────────────────────────────────────────────────────
 
 @Composable
 private fun HandArea(
@@ -165,7 +287,7 @@ private fun HandArea(
     viewModel: GameViewModel
 ) {
     val currentPlayer = gameState.players.getOrNull(gameState.currentPlayerIndex) ?: return
-    
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
@@ -176,22 +298,33 @@ private fun HandArea(
                 modifier = Modifier
                     .padding(4.dp)
                     .size(60.dp, 90.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(if (isSelected) Color(0xFF81D4FA) else Color.White)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(
+                        if (isSelected) Color(0xFF81D4FA) else Color.White
+                    )
+                    .then(
+                        if (isSelected) Modifier.border(
+                            width = 2.5.dp,
+                            color = Color(0xFF0288D1),
+                            shape = RoundedCornerShape(12.dp)
+                        ) else Modifier
+                    )
                     .pulseClickable {
                         viewModel.toggleCardSelection(card.id)
                     },
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = card.symbol.name.take(2),
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+                SymbolIcon(
+                    symbol   = card.symbol,
+                    modifier = Modifier.size(44.dp),
+                    dimmed   = false
                 )
             }
         }
     }
 }
+
+// ─── ActionArea ──────────────────────────────────────────────────────────────
 
 @Composable
 private fun ActionArea(viewModel: GameViewModel) {
