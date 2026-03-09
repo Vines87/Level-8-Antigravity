@@ -13,6 +13,14 @@ class GameCoreEngine(
     private val seedEngine: DeterministicSeedEngine,
     private val deckFactory: DeckFactory
 ) {
+    fun setupGame(players: List<Player>, licenseStatus: LicenseStatus = LicenseStatus.PREMIUM): GameState {
+        val initialState = GameState(
+            players = players,
+            deck = emptyList(),
+            activeMission = null
+        )
+        return startNewRound(initialState, licenseStatus)
+    }
 
     fun drawCard(gameState: GameState, playerId: String, licenseStatus: LicenseStatus = LicenseStatus.PREMIUM): GameState {
         val player = gameState.players.find { it.id == playerId } ?: return gameState
@@ -68,15 +76,49 @@ class GameCoreEngine(
         // Siegbedingung bei Erreichen von 6 Punkten
         val isWin = newScore >= Player.WINNING_SCORE
         
-        // Deterministische Logik für die Missionsauswahl
-        val availableMissions = Mission.getAvailableMissions(licenseStatus)
-        val newMission = if (availableMissions.isNotEmpty()) availableMissions.random(seedEngine.random) else null
+        return if (!isWin) {
+            // Wenn das Spiel nicht vorbei ist, starten wir eine neue Runde
+            startNewRound(
+                gameState.copy(players = updatedPlayers), 
+                licenseStatus
+            )
+        } else {
+            gameState.copy(
+                players = updatedPlayers,
+                isGameOver = true,
+                winner = updatedPlayer,
+                activeMission = mission
+            )
+        }
+    }
+
+    fun startNewRound(gameState: GameState, licenseStatus: LicenseStatus): GameState {
+        // Deck neu generieren
+        val newDeck = deckFactory.generateDeck(licenseStatus).shuffled(seedEngine.random).toMutableList()
         
+        // Alle Spieler-Hände leeren und 5 neue Karten austeilen
+        val updatedPlayers = gameState.players.map { player ->
+            val newHand = mutableListOf<Card>()
+            repeat(Player.MAX_HAND_SIZE) {
+                if (newDeck.isNotEmpty()) {
+                    newHand.add(newDeck.removeAt(0))
+                }
+            }
+            player.copy(hand = newHand)
+        }
+
+        // Neue Mission wählen
+        val availableMissions = Mission.getAvailableMissions(licenseStatus)
+        val newMission = if (availableMissions.isNotEmpty()) {
+            availableMissions.random(seedEngine.random)
+        } else {
+            null
+        }
+
         return gameState.copy(
             players = updatedPlayers,
-            isGameOver = isWin,
-            winner = if (isWin) updatedPlayer else null,
-            activeMission = if (!isWin) newMission else mission
+            deck = newDeck,
+            activeMission = newMission
         )
     }
 }

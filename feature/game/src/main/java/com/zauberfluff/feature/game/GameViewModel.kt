@@ -12,6 +12,9 @@ import com.zauberfluff.core.domain.model.Mission
 import com.zauberfluff.core.domain.model.Player
 import com.zauberfluff.core.domain.usecase.GameCoreEngine
 import com.zauberfluff.core.domain.usecase.MissionValidator
+import com.zauberfluff.core.domain.usecase.TurnManager
+import com.zauberfluff.core.domain.usecase.ai.AiDecisionEngine
+import com.zauberfluff.core.domain.usecase.ai.EasyAiStrategy
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +27,10 @@ class GameViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val seedEngine: DeterministicSeedEngine = DeterministicSeedEngine(System.currentTimeMillis()), // Using current time for default app run, could be fixed seed for tests
     private val deckFactory: DeckFactory = DeckFactory(seedEngine.random),
-    private val gameEngine: GameCoreEngine = GameCoreEngine(MissionValidator(), seedEngine, deckFactory)
+    private val gameEngine: GameCoreEngine = GameCoreEngine(MissionValidator(), seedEngine, deckFactory),
+    private val aiDecisionEngine: AiDecisionEngine = AiDecisionEngine(gameEngine),
+    private val turnManager: TurnManager = TurnManager(aiDecisionEngine),
+    private val aiStrategy: EasyAiStrategy = EasyAiStrategy(seedEngine.random, MissionValidator())
 ) : ViewModel() {
 
     companion object {
@@ -63,17 +69,14 @@ class GameViewModel(
 
     private fun createInitialState(): GameState {
         val players = listOf(Player(name = "Du"), Player(name = "Zauberfluff", isAi = true))
-        return GameState(
-            players = players,
-            deck = deckFactory.generateDeck(LicenseStatus.PREMIUM),
-            activeMission = Mission.getAvailableMissions(LicenseStatus.PREMIUM).first()
-        )
+        return gameEngine.setupGame(players, LicenseStatus.PREMIUM)
     }
 
     fun drawCard() {
         _gameState.update { state ->
             val currentPlayer = state.players[state.currentPlayerIndex]
-            gameEngine.drawCard(state, currentPlayer.id)
+            val stateAfterDraw = gameEngine.drawCard(state, currentPlayer.id)
+            turnManager.advanceTurn(stateAfterDraw, aiStrategy)
         }
     }
 
@@ -100,7 +103,7 @@ class GameViewModel(
                 _selectedCards.value = emptySet()
             }
             
-            newState
+            turnManager.advanceTurn(newState, aiStrategy)
         }
     }
 }
