@@ -1,2 +1,0 @@
-K:\OneDrive\Codex\Level 8 Antigravity\core\ui\src\main\java\com\zauberfluff\core\ui\AdaptiveLayout.kt
-K:\OneDrive\Codex\Level 8 Antigravity\core\ui\src\main\java\com\zauberfluff\core\ui\InteractionFeedback.kt
