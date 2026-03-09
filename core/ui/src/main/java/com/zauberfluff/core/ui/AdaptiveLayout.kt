@@ -19,8 +19,7 @@ fun ZauberfluffAdaptiveLayout(
     tabletLayout: @Composable () -> Unit
 ) {
     val isTabletWidth = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
-    val isLandscape = windowSizeClass.widthSizeClass > windowSizeClass.heightSizeClass ||
-            windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact
+    val isLandscape = windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact
 
     when {
         isTabletWidth -> {
