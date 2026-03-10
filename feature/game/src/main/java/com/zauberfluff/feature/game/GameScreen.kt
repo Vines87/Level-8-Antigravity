@@ -28,6 +28,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.createSavedStateHandle
 import com.zauberfluff.core.domain.model.GameState
 import com.zauberfluff.core.domain.model.Mission
 import com.zauberfluff.core.domain.model.MissionType
@@ -71,7 +74,13 @@ private fun playerCandidateSymbols(
 @Composable
 fun GameScreen(
     windowSizeClass: WindowSizeClass,
-    viewModel: GameViewModel = viewModel()
+    viewModel: GameViewModel = viewModel(
+        factory = viewModelFactory {
+            initializer {
+                GameViewModel(savedStateHandle = createSavedStateHandle())
+            }
+        }
+    )
 ) {
     val gameState by viewModel.gameState.collectAsState()
     val selectedCards by viewModel.selectedCards.collectAsState()
