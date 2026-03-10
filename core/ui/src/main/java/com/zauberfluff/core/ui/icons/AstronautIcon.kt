@@ -1,7 +1,6 @@
 package com.zauberfluff.core.ui.icons
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -9,10 +8,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-/**
- * Super-cute Astronaut icon 🚀👨‍🚀
- * A chubby round helmet with huge shiny eyes and a tiny smile.
- */
 val AstronautIcon: ImageVector by lazy {
     ImageVector.Builder(
         name = "Astronaut",
@@ -21,161 +16,140 @@ val AstronautIcon: ImageVector by lazy {
         viewportWidth = 96f,
         viewportHeight = 96f
     ).apply {
-
-        // ── Body / Suit (pale silver-white, very round) ──────────────────────
+        // Chubby Body
         path(
-            fill = SolidColor(Color(0xFFE8EDF5)),
-            fillAlpha = 1f,
-            stroke = SolidColor(Color(0xFF9AAABF)),
-            strokeLineWidth = 2f,
+            fill = SolidColor(Color.White),
+            stroke = SolidColor(Color.Black),
+            strokeLineWidth = 6f,
             strokeLineCap = StrokeCap.Round,
             strokeLineJoin = StrokeJoin.Round
         ) {
-            // Big chubby oval body
-            moveTo(24f, 60f)
-            curveTo(24f, 82f, 36f, 90f, 48f, 90f)
-            curveTo(60f, 90f, 72f, 82f, 72f, 60f)
-            curveTo(72f, 50f, 66f, 44f, 48f, 44f)
-            curveTo(30f, 44f, 24f, 50f, 24f, 60f)
+            moveTo(24f, 80f)
+            curveTo(16f, 80f, 20f, 48f, 48f, 48f)
+            curveTo(76f, 48f, 80f, 80f, 72f, 80f)
+            curveTo(64f, 80f, 60f, 64f, 48f, 64f)
+            curveTo(36f, 64f, 32f, 80f, 24f, 80f)
             close()
         }
 
-        // ── Helmet (round, light blue tint visor) ────────────────────────────
+        // Chubby Arms
+        // Left Arm
         path(
-            fill = SolidColor(Color(0xFFD0E8FF)),
-            fillAlpha = 1f,
-            stroke = SolidColor(Color(0xFF7AABDA)),
-            strokeLineWidth = 2.5f,
+            fill = SolidColor(Color.White),
+            stroke = SolidColor(Color.Black),
+            strokeLineWidth = 6f,
             strokeLineCap = StrokeCap.Round,
             strokeLineJoin = StrokeJoin.Round
         ) {
-            // Outer helmet circle – big & round ≈ circle at (48,38) r=30
-            moveTo(18f, 38f)
-            curveTo(18f, 20.3f, 31.4f, 6f, 48f, 6f)
-            curveTo(64.6f, 6f, 78f, 20.3f, 78f, 38f)
-            curveTo(78f, 55.7f, 64.6f, 70f, 48f, 70f)
-            curveTo(31.4f, 70f, 18f, 55.7f, 18f, 38f)
+            moveTo(28f, 52f)
+            curveTo(12f, 48f, 8f, 64f, 16f, 72f)
+            curveTo(20f, 72f, 24f, 64f, 28f, 56f)
             close()
         }
-
-        // ── Helmet rim / collar ───────────────────────────────────────────────
+        // Right Arm (Waving)
         path(
-            fill = SolidColor(Color(0xFFBBCCE0)),
-            strokeLineWidth = 0f
+            fill = SolidColor(Color.White),
+            stroke = SolidColor(Color.Black),
+            strokeLineWidth = 6f,
+            strokeLineCap = StrokeCap.Round,
+            strokeLineJoin = StrokeJoin.Round
         ) {
-            moveTo(30f, 64f)
-            curveTo(30f, 68f, 38f, 72f, 48f, 72f)
-            curveTo(58f, 72f, 66f, 68f, 66f, 64f)
-            curveTo(66f, 60f, 58f, 57f, 48f, 57f)
-            curveTo(38f, 57f, 30f, 60f, 30f, 64f)
+            moveTo(68f, 52f)
+            curveTo(84f, 32f, 96f, 48f, 80f, 64f)
+            curveTo(76f, 64f, 72f, 60f, 68f, 56f)
             close()
         }
 
-        // ── Left big eye (white) ──────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFFFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(29f, 34f)
-            curveTo(29f, 26f, 34f, 20f, 40.5f, 20f)
-            curveTo(47f, 20f, 52f, 26f, 52f, 34f)
-            curveTo(52f, 42f, 47f, 48f, 40.5f, 48f)
-            curveTo(34f, 48f, 29f, 42f, 29f, 34f)
-            close()
-        }
-
-        // ── Right big eye (white) ─────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFFFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(44f, 34f)
-            curveTo(44f, 26f, 49f, 20f, 55.5f, 20f)
-            curveTo(62f, 20f, 67f, 26f, 67f, 34f)
-            curveTo(67f, 42f, 62f, 48f, 55.5f, 48f)
-            curveTo(49f, 48f, 44f, 42f, 44f, 34f)
-            close()
-        }
-
-        // ── Left iris (deep blue) ─────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFF3A7BD5)), strokeLineWidth = 0f) {
-            moveTo(33f, 34f)
-            curveTo(33f, 29f, 36.4f, 25f, 40.5f, 25f)
-            curveTo(44.6f, 25f, 48f, 29f, 48f, 34f)
-            curveTo(48f, 39f, 44.6f, 43f, 40.5f, 43f)
-            curveTo(36.4f, 43f, 33f, 39f, 33f, 34f)
-            close()
-        }
-
-        // ── Right iris (deep blue) ────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFF3A7BD5)), strokeLineWidth = 0f) {
-            moveTo(48f, 34f)
-            curveTo(48f, 29f, 51.4f, 25f, 55.5f, 25f)
-            curveTo(59.6f, 25f, 63f, 29f, 63f, 34f)
-            curveTo(63f, 39f, 59.6f, 43f, 55.5f, 43f)
-            curveTo(51.4f, 43f, 48f, 39f, 48f, 34f)
-            close()
-        }
-
-        // ── Pupils (black) ────────────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFF1A1A2E)), strokeLineWidth = 0f) {
-            moveTo(37f, 33f); curveTo(37f, 31f, 38.5f, 30f, 40.5f, 30f)
-            curveTo(42.5f, 30f, 44f, 31f, 44f, 33f)
-            curveTo(44f, 35f, 42.5f, 36f, 40.5f, 36f)
-            curveTo(38.5f, 36f, 37f, 35f, 37f, 33f)
-            close()
-        }
-        path(fill = SolidColor(Color(0xFF1A1A2E)), strokeLineWidth = 0f) {
-            moveTo(52f, 33f); curveTo(52f, 31f, 53.5f, 30f, 55.5f, 30f)
-            curveTo(57.5f, 30f, 59f, 31f, 59f, 33f)
-            curveTo(59f, 35f, 57.5f, 36f, 55.5f, 36f)
-            curveTo(53.5f, 36f, 52f, 35f, 52f, 33f)
-            close()
-        }
-
-        // ── Sparkle highlights in eyes ────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFFFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(38f, 29f); curveTo(38f, 28f, 39f, 28f, 39f, 29f)
-            curveTo(39f, 30f, 38f, 30f, 38f, 29f); close()
-        }
-        path(fill = SolidColor(Color(0xFFFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(53f, 29f); curveTo(53f, 28f, 54f, 28f, 54f, 29f)
-            curveTo(54f, 30f, 53f, 30f, 53f, 29f); close()
-        }
-
-        // ── Tiny smile ────────────────────────────────────────────────────────
+        // Huge Round Helmet
         path(
-            fill = SolidColor(Color(0x00000000)),
-            stroke = SolidColor(Color(0xFF5C3D2E)),
-            strokeLineWidth = 2.5f,
+            fill = SolidColor(Color.White),
+            stroke = SolidColor(Color.Black),
+            strokeLineWidth = 6f,
+            strokeLineCap = StrokeCap.Round,
+            strokeLineJoin = StrokeJoin.Round
+        ) {
+            moveTo(48f, 12f)
+            curveTo(72f, 12f, 76f, 36f, 76f, 48f)
+            curveTo(76f, 60f, 72f, 60f, 48f, 60f)
+            curveTo(24f, 60f, 20f, 60f, 20f, 48f)
+            curveTo(20f, 36f, 24f, 12f, 48f, 12f)
+            close()
+        }
+
+        // Helmet Visor (Light Blue)
+        path(
+            fill = SolidColor(Color(0xFF80D8FF)), // Light Blue Visor
+            stroke = SolidColor(Color.Black),
+            strokeLineWidth = 4f,
+            strokeLineCap = StrokeCap.Round,
+            strokeLineJoin = StrokeJoin.Round
+        ) {
+            moveTo(48f, 20f)
+            curveTo(68f, 20f, 68f, 36f, 68f, 44f)
+            curveTo(68f, 52f, 68f, 52f, 48f, 52f)
+            curveTo(28f, 52f, 28f, 52f, 28f, 44f)
+            curveTo(28f, 36f, 28f, 20f, 48f, 20f)
+            close()
+        }
+
+        // Visor Glare (Top Right)
+        path(
+            stroke = SolidColor(Color.White),
+            strokeLineWidth = 4f,
             strokeLineCap = StrokeCap.Round
         ) {
-            moveTo(40f, 52f)
-            curveTo(42f, 55f, 50f, 55f, 56f, 52f)
+            moveTo(62f, 24f)
+            curveTo(64f, 28f, 64f, 32f, 62f, 36f)
         }
 
-        // ── Suit badge (orange circle) ────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFFFF8C42)), strokeLineWidth = 0f) {
-            moveTo(43f, 76f); curveTo(43f, 73f, 45f, 71f, 48f, 71f)
-            curveTo(51f, 71f, 53f, 73f, 53f, 76f)
-            curveTo(53f, 79f, 51f, 81f, 48f, 81f)
-            curveTo(45f, 81f, 43f, 79f, 43f, 76f); close()
+        // Huge Eye 1 (Inside Visor, Left)
+        path(fill = SolidColor(Color.Black)) { 
+            moveTo(36f, 32f)
+            curveTo(42f, 32f, 44f, 38f, 44f, 44f)
+            curveTo(44f, 50f, 42f, 50f, 36f, 50f)
+            curveTo(30f, 50f, 28f, 50f, 28f, 44f)
+            curveTo(28f, 38f, 30f, 32f, 36f, 32f)
+            close()
+        }
+        // Eye 1 Reflections
+        path(fill = SolidColor(Color.White)) {
+            moveTo(36f, 36f); curveTo(38f, 36f, 38f, 38f, 38f, 40f); curveTo(38f, 42f, 38f, 42f, 36f, 42f); curveTo(34f, 42f, 34f, 42f, 34f, 40f); curveTo(34f, 38f, 34f, 36f, 36f, 36f); close()
         }
 
-        // ── Little gloves / hands ─────────────────────────────────────────────
-        path(
-            fill = SolidColor(Color(0xFFE8EDF5)),
-            stroke = SolidColor(Color(0xFF9AAABF)),
-            strokeLineWidth = 2f,
-            strokeLineCap = StrokeCap.Round
-        ) {
-            // Left hand
-            moveTo(18f, 72f); curveTo(12f, 70f, 10f, 76f, 16f, 78f)
-            curveTo(22f, 80f, 26f, 76f, 18f, 72f); close()
+        // Huge Eye 2 (Inside Visor, Right)
+        path(fill = SolidColor(Color.Black)) {
+            moveTo(60f, 32f)
+            curveTo(66f, 32f, 68f, 38f, 68f, 44f)
+            curveTo(68f, 50f, 66f, 50f, 60f, 50f)
+            curveTo(54f, 50f, 52f, 50f, 52f, 44f)
+            curveTo(52f, 38f, 54f, 32f, 60f, 32f)
+            close()
         }
-        path(
-            fill = SolidColor(Color(0xFFE8EDF5)),
-            stroke = SolidColor(Color(0xFF9AAABF)),
-            strokeLineWidth = 2f,
-            strokeLineCap = StrokeCap.Round
-        ) {
-            // Right hand
-            moveTo(78f, 72f); curveTo(84f, 70f, 86f, 76f, 80f, 78f)
-            curveTo(74f, 80f, 70f, 76f, 78f, 72f); close()
+        // Eye 2 Reflections
+        path(fill = SolidColor(Color.White)) {
+            moveTo(60f, 36f); curveTo(62f, 36f, 62f, 38f, 62f, 40f); curveTo(62f, 42f, 62f, 42f, 60f, 42f); curveTo(58f, 42f, 58f, 42f, 58f, 40f); curveTo(58f, 38f, 58f, 36f, 60f, 36f); close()
+        }
+
+        // Cute blush marks inside visor
+        path(fill = SolidColor(Color(0x88FF80AB))) { // Pinkish blush
+            moveTo(30f, 46f); curveTo(34f, 46f, 34f, 48f, 34f, 50f); curveTo(34f, 52f, 30f, 52f, 30f, 50f); curveTo(26f, 50f, 26f, 48f, 30f, 46f); close()
+            moveTo(66f, 46f); curveTo(70f, 46f, 70f, 48f, 70f, 50f); curveTo(70f, 52f, 66f, 52f, 66f, 50f); curveTo(62f, 50f, 62f, 48f, 66f, 46f); close()
+        }
+
+        // Helmet Buttons / Decals (Colorful)
+        path(fill = SolidColor(Color(0xFFFF5252)), stroke = SolidColor(Color.Black), strokeLineWidth = 2f) { // Red button
+            moveTo(40f, 68f)
+            curveTo(44f, 68f, 44f, 72f, 44f, 72f)
+            curveTo(44f, 76f, 40f, 76f, 40f, 76f)
+            curveTo(36f, 76f, 36f, 72f, 36f, 72f)
+            close()
+        }
+        path(fill = SolidColor(Color(0xFF00E5FF)), stroke = SolidColor(Color.Black), strokeLineWidth = 2f) { // Blue button
+            moveTo(56f, 68f)
+            curveTo(60f, 68f, 60f, 72f, 60f, 72f)
+            curveTo(60f, 76f, 56f, 76f, 56f, 76f)
+            curveTo(52f, 76f, 52f, 72f, 52f, 72f)
+            close()
         }
 
     }.build()

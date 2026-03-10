@@ -15,8 +15,8 @@ class EasyAiStrategyTest {
 
     @Test
     fun `determineAction draws card if mission cannot be completed`() {
-        val player = Player("ai", "Bot", isAi = true, hand = listOf(Card(Symbol.DRAGON)))
-        val state = GameState(listOf(player), deck = listOf(Card(Symbol.UNICORN)), activeMission = Mission(MissionType.THREE_SAME, false, 3))
+        val player = Player("ai", "Bot", isAi = true, hand = listOf(Card(Symbol.ASTRONAUT)))
+        val state = GameState(listOf(player), deck = listOf(Card(Symbol.PLANET)), activeMission = Mission(MissionType.THREE_SAME, false, 3))
         
         val action = strategy.determineAction(state, player)
         
@@ -26,7 +26,7 @@ class EasyAiStrategyTest {
     @Test
     fun `determineAction completes mission if cards are right`() {
         // Random(42).nextFloat() is 0.6559, which is < 0.8f. So it will find the mission.
-        val cards = listOf(Card(Symbol.DRAGON), Card(Symbol.DRAGON), Card(Symbol.DRAGON))
+        val cards = listOf(Card(Symbol.ASTRONAUT), Card(Symbol.ASTRONAUT), Card(Symbol.ASTRONAUT))
         val player = Player("ai", "Bot", isAi = true, hand = cards)
         val state = GameState(listOf(player), deck = emptyList(), activeMission = Mission(MissionType.THREE_SAME, false, 3))
         

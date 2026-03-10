@@ -15,28 +15,28 @@ class MissionValidatorTest {
     @Test
     fun `validate THREE_SAME returns true for 3 exact symbols`() {
         val mission = Mission(MissionType.THREE_SAME, false, 3)
-        val cards = listOf(Card(Symbol.DRAGON), Card(Symbol.DRAGON), Card(Symbol.DRAGON))
+        val cards = listOf(Card(Symbol.ASTRONAUT), Card(Symbol.ASTRONAUT), Card(Symbol.ASTRONAUT))
         assertTrue(validator.validate(mission, cards))
     }
 
     @Test
     fun `validate THREE_SAME returns false for mixed symbols`() {
         val mission = Mission(MissionType.THREE_SAME, false, 3)
-        val cards = listOf(Card(Symbol.DRAGON), Card(Symbol.UNICORN), Card(Symbol.DRAGON))
+        val cards = listOf(Card(Symbol.ASTRONAUT), Card(Symbol.PLANET), Card(Symbol.ASTRONAUT))
         assertFalse(validator.validate(mission, cards))
     }
 
     @Test
     fun `validate THREE_DIFFERENT returns true for 3 distinct symbols`() {
         val mission = Mission(MissionType.THREE_DIFFERENT, false, 3)
-        val cards = listOf(Card(Symbol.DRAGON), Card(Symbol.UNICORN), Card(Symbol.FAIRY))
+        val cards = listOf(Card(Symbol.ASTRONAUT), Card(Symbol.PLANET), Card(Symbol.ROCKET))
         assertTrue(validator.validate(mission, cards))
     }
 
     @Test
     fun `validate returns false if required count is not met`() {
         val mission = Mission(MissionType.THREE_SAME, false, 3)
-        val cards = listOf(Card(Symbol.DRAGON), Card(Symbol.DRAGON))
+        val cards = listOf(Card(Symbol.ASTRONAUT), Card(Symbol.ASTRONAUT))
         assertFalse(validator.validate(mission, cards))
     }
 
@@ -45,14 +45,14 @@ class MissionValidatorTest {
     @Test
     fun `validate THREE_SAME with 1 Joker counts as wildcard`() {
         val mission = Mission(MissionType.THREE_SAME, false, 3)
-        val cards = listOf(Card(Symbol.DRAGON), Card(Symbol.DRAGON), Card(Symbol.JOKER))
+        val cards = listOf(Card(Symbol.ASTRONAUT), Card(Symbol.ASTRONAUT), Card(Symbol.JOKER))
         assertTrue(validator.validate(mission, cards))
     }
 
     @Test
     fun `validate THREE_SAME with 2 Jokers counts as wildcard`() {
         val mission = Mission(MissionType.THREE_SAME, false, 3)
-        val cards = listOf(Card(Symbol.UNICORN), Card(Symbol.JOKER), Card(Symbol.JOKER))
+        val cards = listOf(Card(Symbol.PLANET), Card(Symbol.JOKER), Card(Symbol.JOKER))
         assertTrue(validator.validate(mission, cards))
     }
 
@@ -66,14 +66,14 @@ class MissionValidatorTest {
     @Test
     fun `validate THREE_DIFFERENT with 1 Joker counts as unique wildcard`() {
         val mission = Mission(MissionType.THREE_DIFFERENT, false, 3)
-        val cards = listOf(Card(Symbol.DRAGON), Card(Symbol.UNICORN), Card(Symbol.JOKER))
+        val cards = listOf(Card(Symbol.ASTRONAUT), Card(Symbol.PLANET), Card(Symbol.JOKER))
         assertTrue(validator.validate(mission, cards))
     }
 
     @Test
     fun `validate THREE_DIFFERENT Joker does not help if non-jokers are duplicates`() {
         val mission = Mission(MissionType.THREE_DIFFERENT, false, 3)
-        val cards = listOf(Card(Symbol.DRAGON), Card(Symbol.DRAGON), Card(Symbol.JOKER))
+        val cards = listOf(Card(Symbol.ASTRONAUT), Card(Symbol.ASTRONAUT), Card(Symbol.JOKER))
         assertFalse(validator.validate(mission, cards))
     }
 }

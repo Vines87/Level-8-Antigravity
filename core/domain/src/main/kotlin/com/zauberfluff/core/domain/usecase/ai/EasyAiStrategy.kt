@@ -36,12 +36,49 @@ class EasyAiStrategy(
             return AiAction.DrawCard
         }
         
-        // If hand is full and cannot complete mission (or missed it), it has to do nothing or we need a discard mechanic.
-        // The rules say "Handkartenlimit von exakt 5 Karten" and "kein Zugriff auf verdeckte Karten". 
-        // We might need to assume a discard or just DrawCard and engine handles full hand by doing nothing.
+        // If hand is full and cannot complete mission (or missed it), we discard a card to make room.
+        if (aiPlayer.hand.isNotEmpty()) {
+            val cardToDiscard = determineCardToDiscard(aiPlayer.hand, mission) ?: aiPlayer.hand.random(random)
+            return AiAction.DiscardCard(cardToDiscard)
+        }
+        
         return null 
     }
     
+    private fun determineCardToDiscard(hand: List<com.zauberfluff.core.domain.model.Card>, mission: com.zauberfluff.core.domain.model.Mission): com.zauberfluff.core.domain.model.Card? {
+        if (hand.isEmpty()) return null
+        
+        return when (mission.type) {
+            com.zauberfluff.core.domain.model.MissionType.THREE_SAME, 
+            com.zauberfluff.core.domain.model.MissionType.FOUR_SAME -> {
+                // Find symbol we have the most of (or JOKER)
+                val symbolCounts = hand.groupBy { it.symbol }.mapValues { it.value.size }
+                val bestSymbol = symbolCounts.maxByOrNull { it.value }?.key
+                
+                // Discard a card that is not the best symbol and not a JOKER
+                val candidates = hand.filter { it.symbol != bestSymbol && it.symbol != com.zauberfluff.core.domain.model.Symbol.JOKER }
+                if (candidates.isNotEmpty()) {
+                    candidates.random(random)
+                } else {
+                    hand.firstOrNull { it.symbol != bestSymbol }
+                }
+            }
+            com.zauberfluff.core.domain.model.MissionType.THREE_DIFFERENT, 
+            com.zauberfluff.core.domain.model.MissionType.FOUR_DIFFERENT -> {
+                // Find duplicate symbols (not counting JOKER)
+                val symbolCounts = hand.filter { it.symbol != com.zauberfluff.core.domain.model.Symbol.JOKER }.groupBy { it.symbol }
+                val duplicates = symbolCounts.values.filter { it.size > 1 }.flatten()
+                
+                // Discard one of the duplicates, or just a non-JOKER card if no duplicates
+                if (duplicates.isNotEmpty()) {
+                    duplicates.random(random)
+                } else {
+                    hand.firstOrNull { it.symbol != com.zauberfluff.core.domain.model.Symbol.JOKER }
+                }
+            }
+        }
+    }
+
     // Simple helper to generate combinations of size k
     private fun <T> generateCombinations(list: List<T>, k: Int): List<List<T>> {
         if (k == 0) return listOf(emptyList())

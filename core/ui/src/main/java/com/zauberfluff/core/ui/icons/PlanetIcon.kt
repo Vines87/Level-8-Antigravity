@@ -8,10 +8,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-/**
- * Super-cute Planet icon 🪐
- * A soft pink/lilac planet with a sweet surprised face and a pastel Saturn ring.
- */
 val PlanetIcon: ImageVector by lazy {
     ImageVector.Builder(
         name = "Planet",
@@ -20,145 +16,89 @@ val PlanetIcon: ImageVector by lazy {
         viewportWidth = 96f,
         viewportHeight = 96f
     ).apply {
-
-        // ── Ring (back half) ──────────────────────────────────────────────────
+        // Thick Saturn-like Rings (Back Half)
         path(
-            fill = SolidColor(Color(0x00000000)),
-            stroke = SolidColor(Color(0xFFB8A0DC)),
+            fill = SolidColor(Color(0xFFFFD54F)), // Yellowish ring
+            stroke = SolidColor(Color.Black),
             strokeLineWidth = 6f,
-            strokeLineCap = StrokeCap.Round
-        ) {
-            // Back arc of the ring
-            moveTo(14f, 52f)
-            curveTo(14f, 44f, 30f, 38f, 48f, 38f)
-            curveTo(66f, 38f, 82f, 44f, 82f, 52f)
-        }
-
-        // ── Planet body ───────────────────────────────────────────────────────
-        path(
-            fill = SolidColor(Color(0xFFF8B4D9)),
-            stroke = SolidColor(Color(0xFFD470A2)),
-            strokeLineWidth = 2.5f,
             strokeLineCap = StrokeCap.Round,
             strokeLineJoin = StrokeJoin.Round
         ) {
-            moveTo(18f, 48f)
-            curveTo(18f, 27.5f, 31.4f, 11f, 48f, 11f)
-            curveTo(64.6f, 11f, 78f, 27.5f, 78f, 48f)
-            curveTo(78f, 68.5f, 64.6f, 85f, 48f, 85f)
-            curveTo(31.4f, 85f, 18f, 68.5f, 18f, 48f)
+            moveTo(8f, 32f)
+            curveTo(40f, 16f, 80f, 40f, 88f, 64f)
+            curveTo(64f, 40f, 24f, 16f, 8f, 32f)
             close()
         }
 
-        // ── Soft pastel stripe on planet ──────────────────────────────────────
+        // Chubby Colorful Planet Body
         path(
-            fill = SolidColor(Color(0xFFFDD0E8)),
-            strokeLineWidth = 0f
-        ) {
-            moveTo(22f, 42f)
-            curveTo(24f, 36f, 34f, 32f, 48f, 32f)
-            curveTo(62f, 32f, 72f, 36f, 74f, 42f)
-            curveTo(72f, 48f, 62f, 52f, 48f, 52f)
-            curveTo(34f, 52f, 24f, 48f, 22f, 42f)
-            close()
-        }
-
-        // ── Big round eyes (white) ────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFFFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(30f, 45f)
-            curveTo(30f, 39f, 34f, 34f, 39f, 34f)
-            curveTo(44f, 34f, 48f, 39f, 48f, 45f)
-            curveTo(48f, 51f, 44f, 56f, 39f, 56f)
-            curveTo(34f, 56f, 30f, 51f, 30f, 45f)
-            close()
-        }
-        path(fill = SolidColor(Color(0xFFFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(48f, 45f)
-            curveTo(48f, 39f, 52f, 34f, 57f, 34f)
-            curveTo(62f, 34f, 66f, 39f, 66f, 45f)
-            curveTo(66f, 51f, 62f, 56f, 57f, 56f)
-            curveTo(52f, 56f, 48f, 51f, 48f, 45f)
-            close()
-        }
-
-        // ── Irises (violet) ───────────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFF9B59B6)), strokeLineWidth = 0f) {
-            moveTo(33f, 45f)
-            curveTo(33f, 41f, 35.7f, 38f, 39f, 38f)
-            curveTo(42.3f, 38f, 45f, 41f, 45f, 45f)
-            curveTo(45f, 49f, 42.3f, 52f, 39f, 52f)
-            curveTo(35.7f, 52f, 33f, 49f, 33f, 45f)
-            close()
-        }
-        path(fill = SolidColor(Color(0xFF9B59B6)), strokeLineWidth = 0f) {
-            moveTo(51f, 45f)
-            curveTo(51f, 41f, 53.7f, 38f, 57f, 38f)
-            curveTo(60.3f, 38f, 63f, 41f, 63f, 45f)
-            curveTo(63f, 49f, 60.3f, 52f, 57f, 52f)
-            curveTo(53.7f, 52f, 51f, 49f, 51f, 45f)
-            close()
-        }
-
-        // ── Pupils ────────────────────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFF1A0033)), strokeLineWidth = 0f) {
-            moveTo(36f, 44f); curveTo(36f, 42f, 37.2f, 41f, 39f, 41f)
-            curveTo(40.8f, 41f, 42f, 42f, 42f, 44f)
-            curveTo(42f, 46f, 40.8f, 47f, 39f, 47f)
-            curveTo(37.2f, 47f, 36f, 46f, 36f, 44f); close()
-        }
-        path(fill = SolidColor(Color(0xFF1A0033)), strokeLineWidth = 0f) {
-            moveTo(54f, 44f); curveTo(54f, 42f, 55.2f, 41f, 57f, 41f)
-            curveTo(58.8f, 41f, 60f, 42f, 60f, 44f)
-            curveTo(60f, 46f, 58.8f, 47f, 57f, 47f)
-            curveTo(55.2f, 47f, 54f, 46f, 54f, 44f); close()
-        }
-
-        // ── Eye sparkles ──────────────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFFFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(37f, 40f); curveTo(37f, 39f, 38f, 39f, 38f, 40f)
-            curveTo(38f, 41f, 37f, 41f, 37f, 40f); close()
-        }
-        path(fill = SolidColor(Color(0xFFFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(55f, 40f); curveTo(55f, 39f, 56f, 39f, 56f, 40f)
-            curveTo(56f, 41f, 55f, 41f, 55f, 40f); close()
-        }
-
-        // ── Rosy cheeks ──────────────────────────────────────────────────────
-        path(fill = SolidColor(Color(0x55FF80BF)), strokeLineWidth = 0f) {
-            moveTo(26f, 53f); curveTo(26f, 50f, 28f, 48f, 31f, 48f)
-            curveTo(34f, 48f, 36f, 50f, 36f, 53f)
-            curveTo(36f, 56f, 34f, 58f, 31f, 58f)
-            curveTo(28f, 58f, 26f, 56f, 26f, 53f); close()
-        }
-        path(fill = SolidColor(Color(0x55FF80BF)), strokeLineWidth = 0f) {
-            moveTo(60f, 53f); curveTo(60f, 50f, 62f, 48f, 65f, 48f)
-            curveTo(68f, 48f, 70f, 50f, 70f, 53f)
-            curveTo(70f, 56f, 68f, 58f, 65f, 58f)
-            curveTo(62f, 58f, 60f, 56f, 60f, 53f); close()
-        }
-
-        // ── Tiny UwU smile ────────────────────────────────────────────────────
-        path(
-            fill = SolidColor(Color(0x00000000)),
-            stroke = SolidColor(Color(0xFF9B3070)),
-            strokeLineWidth = 2.5f,
-            strokeLineCap = StrokeCap.Round
-        ) {
-            moveTo(38f, 62f)
-            curveTo(41f, 66f, 55f, 66f, 58f, 62f)
-        }
-
-        // ── Ring (front half) ─────────────────────────────────────────────────
-        path(
-            fill = SolidColor(Color(0x00000000)),
-            stroke = SolidColor(Color(0xFFCDB4F5)),
+            fill = SolidColor(Color(0xFFB388FF)), // Light Purple
+            stroke = SolidColor(Color.Black),
             strokeLineWidth = 6f,
-            strokeLineCap = StrokeCap.Round
+            strokeLineCap = StrokeCap.Round,
+            strokeLineJoin = StrokeJoin.Round
         ) {
-            moveTo(14f, 52f)
-            curveTo(14f, 60f, 30f, 66f, 48f, 66f)
-            curveTo(66f, 66f, 82f, 60f, 82f, 52f)
+            moveTo(48f, 16f)
+            curveTo(80f, 16f, 84f, 48f, 80f, 64f)
+            curveTo(72f, 88f, 40f, 88f, 24f, 76f)
+            curveTo(12f, 56f, 16f, 16f, 48f, 16f)
+            close()
         }
 
+        // Some craters/spots
+        path(fill = SolidColor(Color(0x66FFFFFF))) {
+            moveTo(32f, 24f); curveTo(38f, 24f, 40f, 28f, 40f, 32f); curveTo(40f, 36f, 38f, 40f, 32f, 40f); curveTo(26f, 40f, 24f, 36f, 24f, 32f); curveTo(24f, 28f, 26f, 24f, 32f, 24f); close()
+            moveTo(60f, 70f); curveTo(66f, 70f, 68f, 72f, 68f, 76f); curveTo(68f, 80f, 66f, 82f, 60f, 82f); curveTo(54f, 82f, 52f, 80f, 52f, 76f); curveTo(52f, 72f, 54f, 70f, 60f, 70f); close()
+        }
+
+        // Huge Eye 1 (Left)
+        path(fill = SolidColor(Color.Black)) { 
+            moveTo(34f, 44f)
+            curveTo(42f, 44f, 46f, 52f, 46f, 60f)
+            curveTo(46f, 68f, 42f, 76f, 34f, 76f)
+            curveTo(26f, 76f, 22f, 68f, 22f, 60f)
+            curveTo(22f, 52f, 26f, 44f, 34f, 44f)
+            close()
+        }
+        // Eye 1 Reflections
+        path(fill = SolidColor(Color.White)) {
+            moveTo(36f, 50f); curveTo(38f, 50f, 40f, 52f, 40f, 54f); curveTo(40f, 56f, 38f, 58f, 36f, 58f); curveTo(34f, 58f, 32f, 56f, 32f, 54f); curveTo(32f, 52f, 34f, 50f, 36f, 50f); close()
+            moveTo(30f, 64f); curveTo(31f, 64f, 32f, 65f, 32f, 66f); curveTo(32f, 67f, 31f, 68f, 30f, 68f); curveTo(29f, 68f, 28f, 67f, 28f, 66f); curveTo(28f, 65f, 29f, 64f, 30f, 64f); close()
+        }
+
+        // Huge Eye 2 (Right)
+        path(fill = SolidColor(Color.Black)) {
+            moveTo(64f, 44f)
+            curveTo(72f, 44f, 76f, 52f, 76f, 60f)
+            curveTo(76f, 68f, 72f, 76f, 64f, 76f)
+            curveTo(56f, 76f, 52f, 68f, 52f, 60f)
+            curveTo(52f, 52f, 56f, 44f, 64f, 44f)
+            close()
+        }
+        // Eye 2 Reflections
+        path(fill = SolidColor(Color.White)) {
+            moveTo(66f, 50f); curveTo(68f, 50f, 70f, 52f, 70f, 54f); curveTo(70f, 56f, 68f, 58f, 66f, 58f); curveTo(64f, 58f, 62f, 56f, 62f, 54f); curveTo(62f, 52f, 64f, 50f, 66f, 50f); close()
+            moveTo(60f, 64f); curveTo(61f, 64f, 62f, 65f, 62f, 66f); curveTo(62f, 67f, 61f, 68f, 60f, 68f); curveTo(59f, 68f, 58f, 67f, 58f, 66f); curveTo(58f, 65f, 59f, 64f, 60f, 64f); close()
+        }
+
+        // Cute smiling mouth
+        path(stroke = SolidColor(Color.Black), strokeLineWidth = 4f, strokeLineCap = StrokeCap.Round) {
+            moveTo(44f, 76f)
+            curveTo(46f, 80f, 52f, 80f, 54f, 76f)
+        }
+
+        // Thick Saturn-like Rings (Front Half)
+        path(
+            fill = SolidColor(Color(0xFFFFD54F)), // Yellowish ring
+            stroke = SolidColor(Color.Black),
+            strokeLineWidth = 6f,
+            strokeLineCap = StrokeCap.Round,
+            strokeLineJoin = StrokeJoin.Round
+        ) {
+            moveTo(88f, 64f)
+            curveTo(80f, 80f, 24f, 64f, 8f, 32f)
+            curveTo(24f, 48f, 72f, 72f, 88f, 64f)
+            close()
+        }
     }.build()
 }

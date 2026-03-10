@@ -21,7 +21,7 @@ class AiDecisionEngineTest {
     @Test
     fun `executeAiTurn draws card when strategy decides to draw`() {
         val player = Player("ai", "Bot", isAi = true, hand = emptyList())
-        val state = GameState(listOf(player), currentPlayerIndex = 0, deck = listOf(Card(Symbol.DRAGON)), activeMission = null)
+        val state = GameState(listOf(player), currentPlayerIndex = 0, deck = listOf(Card(Symbol.ASTRONAUT)), activeMission = null)
         val easyStrategy = EasyAiStrategy(random, validator)
         
         val newState = aiDecisionEngine.executeAiTurn(state, easyStrategy)
@@ -32,7 +32,7 @@ class AiDecisionEngineTest {
 
     @Test
     fun `executeAiTurn completes mission when strategy decides to complete`() {
-        val cards = listOf(Card(Symbol.DRAGON), Card(Symbol.DRAGON), Card(Symbol.DRAGON))
+        val cards = listOf(Card(Symbol.ASTRONAUT), Card(Symbol.ASTRONAUT), Card(Symbol.ASTRONAUT))
         val player = Player("ai", "Bot", isAi = true, hand = cards)
         val state = GameState(listOf(player), currentPlayerIndex = 0, deck = emptyList(), activeMission = Mission(MissionType.THREE_SAME, false, 3))
         
@@ -42,13 +42,13 @@ class AiDecisionEngineTest {
         val newState = aiDecisionEngine.executeAiTurn(state, strategy)
         
         assertEquals(1, newState.players.first().score)
-        assertEquals(0, newState.players.first().hand.size)
+        assertEquals(Player.MAX_HAND_SIZE, newState.players.first().hand.size)
     }
     
     @Test
     fun `executeAiTurn does nothing if player is not AI`() {
         val player = Player("p1", "Human", isAi = false, hand = emptyList())
-        val state = GameState(listOf(player), currentPlayerIndex = 0, deck = listOf(Card(Symbol.DRAGON)), activeMission = null)
+        val state = GameState(listOf(player), currentPlayerIndex = 0, deck = listOf(Card(Symbol.ASTRONAUT)), activeMission = null)
         val strategy = EasyAiStrategy(random, validator)
         
         val newState = aiDecisionEngine.executeAiTurn(state, strategy)

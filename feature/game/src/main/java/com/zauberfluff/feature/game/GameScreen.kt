@@ -112,7 +112,7 @@ private fun GameLayoutPortrait(
         TopBar(gameState)
         MissionArea(gameState)
         HandArea(gameState, selectedCards, viewModel)
-        ActionArea(viewModel)
+        ActionArea(viewModel, gameState, selectedCards)
     }
 }
 
@@ -144,7 +144,7 @@ private fun GameLayoutLandscape(
         ) {
             HandArea(gameState, selectedCards, viewModel)
             Spacer(modifier = Modifier.height(16.dp))
-            ActionArea(viewModel)
+            ActionArea(viewModel, gameState, selectedCards)
         }
     }
 }
@@ -301,22 +301,27 @@ private fun HandArea(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        currentPlayer.hand.forEach { card ->
+        currentPlayer.hand.take(5).forEach { card ->
             val isSelected = selectedCards.contains(card.id)
             Box(
                 modifier = Modifier
-                    .padding(4.dp)
-                    .size(60.dp, 90.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .padding(horizontal = 6.dp, vertical = 6.dp)
+                    .width(86.dp)
+                    .height(130.dp)
+                    .clip(RoundedCornerShape(16.dp))
                     .background(
                         if (isSelected) Color(0xFF81D4FA) else Color.White
                     )
                     .then(
                         if (isSelected) Modifier.border(
-                            width = 2.5.dp,
+                            width = 4.dp,
                             color = Color(0xFF0288D1),
-                            shape = RoundedCornerShape(12.dp)
-                        ) else Modifier
+                            shape = RoundedCornerShape(16.dp)
+                        ) else Modifier.border(
+                            width = 2.dp,
+                            color = Color(0xFFB0BEC5),
+                            shape = RoundedCornerShape(16.dp)
+                        )
                     )
                     .pulseClickable {
                         viewModel.toggleCardSelection(card.id)
@@ -325,7 +330,7 @@ private fun HandArea(
             ) {
                 SymbolIcon(
                     symbol   = card.symbol,
-                    modifier = Modifier.size(44.dp),
+                    modifier = Modifier.size(72.dp),
                     dimmed   = false
                 )
             }
@@ -336,35 +341,82 @@ private fun HandArea(
 // ─── ActionArea ──────────────────────────────────────────────────────────────
 
 @Composable
-private fun ActionArea(viewModel: GameViewModel) {
+private fun ActionArea(viewModel: GameViewModel, gameState: GameState, selectedCards: Set<String>) {
+    val currentPlayer = gameState.players.getOrNull(gameState.currentPlayerIndex)
+    val isHandFull = currentPlayer?.hand?.size == 5
+    val hasSelection = selectedCards.isNotEmpty()
+    
+    val isDrawEnabled = !isHandFull
+    val isDiscardEnabled = selectedCards.size == 1
+
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        // Draw Button
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .padding(8.dp)
+                .padding(4.dp)
                 .height(48.dp)
                 .clip(RoundedCornerShape(24.dp))
-                .background(Color(0xFF2196F3))
-                .padding(horizontal = 24.dp)
-                .pulseClickable { viewModel.drawCard() }
+                .background(if (isDrawEnabled) Color(0xFF2196F3) else Color(0xFFB0BEC5))
+                .padding(horizontal = 16.dp)
+                .pulseClickable(enabled = isDrawEnabled) { viewModel.drawCard() }
         ) {
-            Text("Karte ziehen", color = Color.White, fontWeight = FontWeight.Bold)
+            Text("Ziehen", color = Color.White, fontWeight = FontWeight.Bold)
         }
 
+        // Wegwerfen Button
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .padding(8.dp)
+                .padding(4.dp)
                 .height(48.dp)
                 .clip(RoundedCornerShape(24.dp))
-                .background(Color(0xFF4CAF50))
-                .padding(horizontal = 24.dp)
-                .pulseClickable { viewModel.completeMission() }
+                .background(if (isDiscardEnabled) Color(0xFFE53935) else Color(0xFFFFCDD2))
+                .padding(horizontal = 16.dp)
+                .pulseClickable(enabled = isDiscardEnabled) { viewModel.discardSelectedCard() }
         ) {
-            Text("Mission erfüllen", color = Color.White, fontWeight = FontWeight.Bold)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                CuteBlackHoleIcon(modifier = Modifier.size(24.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Wegwerfen", color = Color.White, fontWeight = FontWeight.Bold)
+            }
         }
+
+        // Mission Complete Button
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(4.dp)
+                .height(48.dp)
+                .clip(RoundedCornerShape(24.dp))
+                .background(if (hasSelection) Color(0xFF4CAF50) else Color(0xFFC8E6C9))
+                .padding(horizontal = 16.dp)
+                .pulseClickable(enabled = hasSelection) { viewModel.completeMission() }
+        ) {
+            Text("Mission", color = Color.White, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+@Composable
+fun CuteBlackHoleIcon(modifier: Modifier = Modifier) {
+    androidx.compose.foundation.Canvas(modifier = modifier) {
+        val minDim = size.minDimension
+        // Base dark space swirl
+        drawCircle(color = Color(0xFF2C3E50), radius = minDim / 2)
+        drawCircle(color = Color(0xFF34495E), radius = minDim / 2.4f)
+        drawCircle(color = Color(0xFF8E44AD), radius = minDim / 3.2f)
+        drawCircle(color = Color(0xFF1ABC9C), radius = minDim / 5.0f)
+        drawCircle(color = Color(0xFF000000), radius = minDim / 8.0f)
+        
+        // Cute tiny stars surrounding the hole
+        drawCircle(color = Color.White, radius = 2.dp.toPx(), center = androidx.compose.ui.geometry.Offset(size.width * 0.25f, size.height * 0.25f))
+        drawCircle(color = Color.White, radius = 1.dp.toPx(), center = androidx.compose.ui.geometry.Offset(size.width * 0.8f, size.height * 0.3f))
+        drawCircle(color = Color.White, radius = 1.5f.dp.toPx(), center = androidx.compose.ui.geometry.Offset(size.width * 0.7f, size.height * 0.75f))
+        drawCircle(color = Color.White, radius = 0.5f.dp.toPx(), center = androidx.compose.ui.geometry.Offset(size.width * 0.3f, size.height * 0.8f))
     }
 }

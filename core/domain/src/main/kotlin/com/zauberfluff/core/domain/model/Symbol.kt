@@ -5,18 +5,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class Symbol(val isPremium: Boolean) {
     // Free pool
-    DRAGON(false),
-    UNICORN(false),
-    FAIRY(false),
-    GOBLIN(false),
+    ASTRONAUT(false),
+    PLANET(false),
+    ROCKET(false),
+    STAR(false),
 
     // Premium pool
-    PHOENIX(true),
-    MERMAID(true),
-    YETI(true),
-    KRAKEN(true),
-    GRIFFIN(true),
-    PEGASUS(true),
+    ALIEN(true),
 
     // Special – always available, injected by DeckFactory only
     JOKER(false);

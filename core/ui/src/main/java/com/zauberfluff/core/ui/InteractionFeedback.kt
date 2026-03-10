@@ -50,6 +50,7 @@ import kotlin.random.Random
  * Ideal for kids interfaces as it gives immediate, playful visual feedback.
  */
 fun Modifier.pulseClickable(
+    enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
     onClick: () -> Unit
 ): Modifier = composed {
@@ -76,6 +77,7 @@ fun Modifier.pulseClickable(
         .clickable(
             interactionSource = actualInteractionSource,
             indication = null, // Disable default ripple for the pulse effect
+            enabled = enabled,
             onClick = {
                 // Secondary haptic on release/click
                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)

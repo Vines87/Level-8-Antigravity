@@ -20,6 +20,9 @@ class AiDecisionEngine(
             is AiAction.DrawCard -> {
                 gameCoreEngine.drawCard(gameState, aiPlayer.id)
             }
+            is AiAction.DiscardCard -> {
+                gameCoreEngine.discardCard(gameState, aiPlayer.id, action.card.id)
+            }
             is AiAction.CompleteMission -> {
                 gameCoreEngine.completeMission(gameState, aiPlayer.id, action.selectedCards)
             }

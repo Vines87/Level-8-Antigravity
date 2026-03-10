@@ -21,6 +21,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -41,4 +44,5 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     implementation("javax.inject:javax.inject:1")
+    testImplementation("junit:junit:4.13.2")
 }

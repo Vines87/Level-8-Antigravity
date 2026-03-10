@@ -83,6 +83,12 @@ class GameViewModel(
     fun drawCard() {
         _gameState.update { state ->
             val currentPlayer = state.players[state.currentPlayerIndex]
+            
+            // Anti-Deadlock: If the hand is full, drawing is blocked. Do not end the turn!
+            if (currentPlayer.hand.size >= Player.MAX_HAND_SIZE) {
+                return@update state
+            }
+            
             val handBefore = currentPlayer.hand.map { it.id }.toSet()
             val stateAfterDraw = gameEngine.drawCard(state, currentPlayer.id)
 
@@ -101,6 +107,23 @@ class GameViewModel(
         }
     }
 
+    fun discardSelectedCard() {
+        _gameState.update { state ->
+            val currentPlayer = state.players[state.currentPlayerIndex]
+            val cardsToDiscard = currentPlayer.hand.filter { it.id in _selectedCards.value }
+            
+            if (cardsToDiscard.isEmpty()) return@update state
+            
+            // Discard exactly ONE card to end the turn
+            val cardToDiscard = cardsToDiscard.first()
+            val currentState = gameEngine.discardCard(state, currentPlayer.id, cardToDiscard.id)
+            
+            _selectedCards.value = emptySet()
+            
+            turnManager.advanceTurn(currentState, aiStrategy)
+        }
+    }
+
     fun toggleCardSelection(cardId: String) {
         _selectedCards.update { currentSelection ->
             if (currentSelection.contains(cardId)) {
@@ -110,6 +133,8 @@ class GameViewModel(
             }
         }
     }
+
+
 
     fun completeMission() {
         _gameState.update { state ->

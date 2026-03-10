@@ -16,9 +16,9 @@ class GameCoreEngineTest {
 
     @Test
     fun `drawCard_notAboveFive stops player from drawing past 5 cards`() {
-        val fullHand = List(5) { Card(Symbol.DRAGON) }
+        val fullHand = List(5) { Card(Symbol.ASTRONAUT) }
         val player = Player("p1", "Tester", hand = fullHand)
-        val deck = listOf(Card(Symbol.UNICORN))
+        val deck = listOf(Card(Symbol.PLANET))
         val state = GameState(listOf(player), deck = deck, activeMission = null)
 
         val updatedState = engine.drawCard(state, "p1")
@@ -29,7 +29,7 @@ class GameCoreEngineTest {
 
     @Test
     fun `winCondition_atSixPoints declares winner when score reaches 6`() {
-        val handCards = listOf(Card(Symbol.DRAGON, id="1"), Card(Symbol.DRAGON, id="2"), Card(Symbol.DRAGON, id="3"))
+        val handCards = listOf(Card(Symbol.ASTRONAUT, id="1"), Card(Symbol.ASTRONAUT, id="2"), Card(Symbol.ASTRONAUT, id="3"))
         val player = Player("p1", "Tester", score = 5, hand = handCards)
         val mission = Mission(MissionType.THREE_SAME, false, 3)
         val state = GameState(listOf(player), deck = emptyList(), activeMission = mission)
@@ -66,7 +66,7 @@ class GameCoreEngineTest {
         )
 
         // Mission complete reproducibility
-        val handCards = listOf(Card(Symbol.DRAGON, id="1"), Card(Symbol.DRAGON, id="2"), Card(Symbol.DRAGON, id="3"))
+        val handCards = listOf(Card(Symbol.ASTRONAUT, id="1"), Card(Symbol.ASTRONAUT, id="2"), Card(Symbol.ASTRONAUT, id="3"))
         val stateMiss1 = GameState(listOf(Player("p1", "Tester", hand = handCards)), deck = emptyList(), activeMission = Mission(MissionType.THREE_SAME, false, 3))
         val stateMiss2 = GameState(listOf(Player("p1", "Tester", hand = handCards)), deck = emptyList(), activeMission = Mission(MissionType.THREE_SAME, false, 3))
 
@@ -78,5 +78,30 @@ class GameCoreEngineTest {
             endState1.activeMission?.type,
             endState2.activeMission?.type
         )
+    }
+
+    @Test
+    fun `startNewRound preserves activeMission if it is not null`() {
+        // Given an active mission
+        val player = Player("p1", "Tester", score = 0, hand = emptyList())
+        val mission = Mission(MissionType.THREE_SAME, false, 3)
+        val state = GameState(listOf(player), deck = emptyList(), activeMission = mission)
+        
+        // When starting a new round
+        val updatedState = engine.startNewRound(state, LicenseStatus.PREMIUM)
+        
+        // Then the mission remains the same
+        assertEquals(mission, updatedState.activeMission)
+    }
+
+    @Test
+    fun `startNewRound generates new activeMission if it is null`() {
+        val player = Player("p1", "Tester", score = 0, hand = emptyList())
+        val state = GameState(listOf(player), deck = emptyList(), activeMission = null)
+        
+        val updatedState = engine.startNewRound(state, LicenseStatus.PREMIUM)
+        
+        // A new mission should be generated
+        assertTrue(updatedState.activeMission != null)
     }
 }

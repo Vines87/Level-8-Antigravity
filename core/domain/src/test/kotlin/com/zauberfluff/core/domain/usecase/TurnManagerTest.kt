@@ -38,7 +38,7 @@ class TurnManagerTest {
         val ai1 = Player("ai1", "Bot1", isAi = true)
         val ai2 = Player("ai2", "Bot2", isAi = true)
         // 3 players: Human(0), AI(1), AI(2)
-        val state = GameState(listOf(human, ai1, ai2), currentPlayerIndex = 0, deck = listOf(Card(Symbol.DRAGON), Card(Symbol.DRAGON)), activeMission = null)
+        val state = GameState(listOf(human, ai1, ai2), currentPlayerIndex = 0, deck = listOf(Card(Symbol.ASTRONAUT), Card(Symbol.ASTRONAUT)), activeMission = null)
 
         // Advance from human -> should play ai1 -> should play ai2 -> return to human
         val newState = turnManager.advanceTurn(state, strategy)

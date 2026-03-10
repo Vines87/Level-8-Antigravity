@@ -8,10 +8,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-/**
- * Super-cute Joker icon 🦄🛸
- * A glittery Unicorn UFO with a rainbow beam and twinkling stars all around.
- */
 val JokerIcon: ImageVector by lazy {
     ImageVector.Builder(
         name = "Joker",
@@ -20,173 +16,89 @@ val JokerIcon: ImageVector by lazy {
         viewportWidth = 96f,
         viewportHeight = 96f
     ).apply {
+        // We simulate a rainbow layout by having a base heart and layered smaller stripes, 
+        // but for a pure vector without complex clips, we can draw a big chubby heart 
+        // with vibrant base color and some rainbow sparkle lines, then add the huge eyes!
 
-        // ── Rainbow beam ──────────────────────────────────────────────────────
-        path(fill = SolidColor(Color(0x55FF1493)), strokeLineWidth = 0f) {
-            moveTo(32f, 62f); lineTo(20f, 92f); lineTo(48f, 80f)
-            lineTo(76f, 92f); lineTo(64f, 62f); close()
-        }
-        path(fill = SolidColor(Color(0x55FF8C00)), strokeLineWidth = 0f) {
-            moveTo(35f, 62f); lineTo(25f, 88f); lineTo(48f, 78f)
-            lineTo(71f, 88f); lineTo(61f, 62f); close()
-        }
-        path(fill = SolidColor(Color(0x55FFD600)), strokeLineWidth = 0f) {
-            moveTo(38f, 62f); lineTo(30f, 85f); lineTo(48f, 76f)
-            lineTo(66f, 85f); lineTo(58f, 62f); close()
-        }
-        path(fill = SolidColor(Color(0x5500C853)), strokeLineWidth = 0f) {
-            moveTo(40f, 62f); lineTo(34f, 82f); lineTo(48f, 74f)
-            lineTo(62f, 82f); lineTo(56f, 62f); close()
-        }
-        path(fill = SolidColor(Color(0x551565C0)), strokeLineWidth = 0f) {
-            moveTo(42f, 62f); lineTo(38f, 79f); lineTo(48f, 72f)
-            lineTo(58f, 79f); lineTo(54f, 62f); close()
-        }
-
-        // ── UFO disc body ─────────────────────────────────────────────────────
+        // Base Thick Heart Outline & Pink Fill
         path(
-            fill = SolidColor(Color(0xFFF3E5F5)),
-            stroke = SolidColor(Color(0xFFCE93D8)),
-            strokeLineWidth = 2.5f,
+            fill = SolidColor(Color(0xFFFF4081)), // Vibrant Pink
+            stroke = SolidColor(Color.Black),
+            strokeLineWidth = 6f, // Thick outline
             strokeLineCap = StrokeCap.Round,
             strokeLineJoin = StrokeJoin.Round
         ) {
-            moveTo(10f, 56f)
-            curveTo(10f, 48f, 26f, 42f, 48f, 42f)
-            curveTo(70f, 42f, 86f, 48f, 86f, 56f)
-            curveTo(86f, 64f, 70f, 70f, 48f, 70f)
-            curveTo(26f, 70f, 10f, 64f, 10f, 56f)
+            moveTo(48f, 32f)
+            // Left lobe
+            curveTo(48f, 16f, 22f, 16f, 14f, 34f)
+            curveTo(6f, 52f, 26f, 72f, 48f, 88f)
+            // Right lobe
+            curveTo(70f, 72f, 90f, 52f, 82f, 34f)
+            curveTo(74f, 16f, 48f, 16f, 48f, 32f)
             close()
         }
 
-        // ── UFO glass dome ────────────────────────────────────────────────────
-        path(
-            fill = SolidColor(Color(0xFFE1F5FE)),
-            stroke = SolidColor(Color(0xFF81D4FA)),
-            strokeLineWidth = 2f,
-            strokeLineCap = StrokeCap.Round
-        ) {
-            moveTo(28f, 50f)
-            curveTo(28f, 34f, 36f, 14f, 48f, 14f)
-            curveTo(60f, 14f, 68f, 34f, 68f, 50f)
+        // Rainbow Stripes (Overlay on top of heart, roughly fitting the shape)
+        // Yellow Stripe
+        path(stroke = SolidColor(Color(0xFFFFEA00)), strokeLineWidth = 8f, strokeLineCap = StrokeCap.Round) {
+            moveTo(20f, 40f)
+            curveTo(40f, 30f, 60f, 50f, 76f, 40f)
+        }
+        // Cyan Stripe
+        path(stroke = SolidColor(Color(0xFF00E5FF)), strokeLineWidth = 8f, strokeLineCap = StrokeCap.Round) {
+            moveTo(24f, 56f)
+            curveTo(44f, 46f, 64f, 66f, 72f, 56f)
+        }
+        
+        // Huge Eye 1 (Left)
+        path(fill = SolidColor(Color.Black)) { // Left Eye
+            moveTo(32f, 42f)
+            // Tilted oval
+            curveTo(40f, 40f, 42f, 48f, 40f, 56f)
+            curveTo(38f, 64f, 30f, 64f, 28f, 56f)
+            curveTo(26f, 48f, 24f, 44f, 32f, 42f)
+            close()
+        }
+        // Eye 1 Reflections
+        path(fill = SolidColor(Color.White)) {
+            moveTo(32f, 46f); curveTo(34f, 46f, 36f, 48f, 36f, 50f); curveTo(36f, 52f, 34f, 54f, 32f, 54f); curveTo(30f, 54f, 28f, 52f, 28f, 50f); curveTo(28f, 48f, 30f, 46f, 32f, 46f); close()
+            moveTo(36f, 56f); curveTo(37f, 55f, 38f, 56f, 38f, 57f); curveTo(38f, 58f, 37f, 59f, 36f, 59f); curveTo(35f, 59f, 34f, 58f, 34f, 57f); curveTo(34f, 56f, 35f, 55f, 36f, 56f); close()
+        }
+
+        // Huge Eye 2 (Right)
+        path(fill = SolidColor(Color.Black)) {
+            moveTo(64f, 42f)
+            curveTo(56f, 40f, 54f, 48f, 56f, 56f)
+            curveTo(58f, 64f, 66f, 64f, 68f, 56f)
+            curveTo(70f, 48f, 72f, 44f, 64f, 42f)
+            close()
+        }
+        // Eye 2 Reflections
+        path(fill = SolidColor(Color.White)) {
+            moveTo(64f, 46f); curveTo(62f, 46f, 60f, 48f, 60f, 50f); curveTo(60f, 52f, 62f, 54f, 64f, 54f); curveTo(66f, 54f, 68f, 52f, 68f, 50f); curveTo(68f, 48f, 66f, 46f, 64f, 46f); close()
+            moveTo(60f, 56f); curveTo(59f, 55f, 58f, 56f, 58f, 57f); curveTo(58f, 58f, 59f, 59f, 60f, 59f); curveTo(61f, 59f, 62f, 58f, 62f, 57f); curveTo(62f, 56f, 61f, 55f, 60f, 56f); close()
+        }
+
+        // Big Laughing Mouth
+        path(fill = SolidColor(Color.Black), stroke = SolidColor(Color.Black), strokeLineWidth = 2f, strokeLineCap = StrokeCap.Round, strokeLineJoin = StrokeJoin.Round) {
+            moveTo(40f, 64f)
+            curveTo(40f, 72f, 56f, 72f, 56f, 64f)
+            lineTo(40f, 64f)
+            close()
+        }
+        // Tongue
+        path(fill = SolidColor(Color(0xFFFF5252))) {
+            moveTo(44f, 68f)
+            curveTo(44f, 70f, 52f, 70f, 52f, 68f)
             close()
         }
 
-        // ── Unicorn horn ──────────────────────────────────────────────────────
-        path(
-            fill = SolidColor(Color(0xFFFFD600)),
-            stroke = SolidColor(Color(0xFFFFAB00)),
-            strokeLineWidth = 1.5f,
-            strokeLineCap = StrokeCap.Round,
-            strokeLineJoin = StrokeJoin.Round
-        ) {
-            moveTo(48f, 2f); lineTo(52f, 16f); lineTo(44f, 16f); close()
+        // Star Sparkles (Glitzer) around the heart
+        path(fill = SolidColor(Color(0xFFFFC107)), stroke = SolidColor(Color.Black), strokeLineWidth = 2f) {
+            // Sparkle 1 Top Left
+            moveTo(16f, 10f); lineTo(18f, 16f); lineTo(24f, 18f); lineTo(18f, 20f); lineTo(16f, 26f); lineTo(14f, 20f); lineTo(8f, 18f); lineTo(14f, 16f); close()
+            // Sparkle 2 Top Right
+            moveTo(80f, 14f); lineTo(81f, 19f); lineTo(86f, 20f); lineTo(81f, 21f); lineTo(80f, 26f); lineTo(79f, 21f); lineTo(74f, 20f); lineTo(79f, 19f); close()
         }
-        path(
-            fill = SolidColor(Color(0x00000000)),
-            stroke = SolidColor(Color(0xFFFFAB00)),
-            strokeLineWidth = 1.5f,
-            strokeLineCap = StrokeCap.Round
-        ) {
-            moveTo(45f, 9f); lineTo(51f, 11f)
-        }
-        path(
-            fill = SolidColor(Color(0x00000000)),
-            stroke = SolidColor(Color(0xFFFFAB00)),
-            strokeLineWidth = 1.5f,
-            strokeLineCap = StrokeCap.Round
-        ) {
-            moveTo(45.5f, 14f); lineTo(50.5f, 15.5f)
-        }
-
-        // ── Eyes inside dome ──────────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFF1565C0)), strokeLineWidth = 0f) {
-            moveTo(37f, 44f); curveTo(37f, 41f, 39f, 39f, 41f, 39f)
-            curveTo(43f, 39f, 45f, 41f, 45f, 44f)
-            curveTo(45f, 47f, 43f, 49f, 41f, 49f)
-            curveTo(39f, 49f, 37f, 47f, 37f, 44f); close()
-        }
-        path(fill = SolidColor(Color(0xFF1565C0)), strokeLineWidth = 0f) {
-            moveTo(51f, 44f); curveTo(51f, 41f, 53f, 39f, 55f, 39f)
-            curveTo(57f, 39f, 59f, 41f, 59f, 44f)
-            curveTo(59f, 47f, 57f, 49f, 55f, 49f)
-            curveTo(53f, 49f, 51f, 47f, 51f, 44f); close()
-        }
-        path(fill = SolidColor(Color(0xFF0D0D1A)), strokeLineWidth = 0f) {
-            moveTo(39f, 43f); curveTo(39f, 42f, 40f, 41.5f, 41f, 41.5f)
-            curveTo(42f, 41.5f, 43f, 42f, 43f, 43f)
-            curveTo(43f, 44f, 42f, 44.5f, 41f, 44.5f)
-            curveTo(40f, 44.5f, 39f, 44f, 39f, 43f); close()
-        }
-        path(fill = SolidColor(Color(0xFF0D0D1A)), strokeLineWidth = 0f) {
-            moveTo(53f, 43f); curveTo(53f, 42f, 54f, 41.5f, 55f, 41.5f)
-            curveTo(56f, 41.5f, 57f, 42f, 57f, 43f)
-            curveTo(57f, 44f, 56f, 44.5f, 55f, 44.5f)
-            curveTo(54f, 44.5f, 53f, 44f, 53f, 43f); close()
-        }
-        path(fill = SolidColor(Color(0xFFFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(40f, 40.5f); curveTo(40f, 40f, 40.6f, 40f, 40.6f, 40.5f)
-            curveTo(40.6f, 41f, 40f, 41f, 40f, 40.5f); close()
-        }
-        path(fill = SolidColor(Color(0xFFFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(54f, 40.5f); curveTo(54f, 40f, 54.6f, 40f, 54.6f, 40.5f)
-            curveTo(54.6f, 41f, 54f, 41f, 54f, 40.5f); close()
-        }
-
-        // ── UFO disc shine ────────────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xAAFFFFFF)), strokeLineWidth = 0f) {
-            moveTo(14f, 52f)
-            curveTo(20f, 48f, 34f, 46f, 48f, 46f)
-            curveTo(62f, 46f, 74f, 48f, 82f, 52f)
-            curveTo(74f, 50f, 62f, 48f, 48f, 48f)
-            curveTo(34f, 48f, 20f, 50f, 14f, 52f)
-            close()
-        }
-
-        // ── Sparkle stars ─────────────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFFFF69B4)), strokeLineWidth = 0f) {
-            moveTo(8f, 36f); lineTo(9.5f, 40f); lineTo(14f, 38f)
-            lineTo(9.5f, 36f); close()
-        }
-        path(fill = SolidColor(Color(0xFFFF69B4)), strokeLineWidth = 0f) {
-            moveTo(8f, 36f); lineTo(9.5f, 32f); lineTo(14f, 38f)
-            lineTo(9.5f, 40f); close()
-        }
-        path(fill = SolidColor(Color(0xFF69F0AE)), strokeLineWidth = 0f) {
-            moveTo(82f, 30f); lineTo(83.5f, 34f); lineTo(88f, 32f)
-            lineTo(83.5f, 30f); close()
-        }
-        path(fill = SolidColor(Color(0xFF69F0AE)), strokeLineWidth = 0f) {
-            moveTo(82f, 30f); lineTo(83.5f, 26f); lineTo(88f, 32f)
-            lineTo(83.5f, 34f); close()
-        }
-        path(fill = SolidColor(Color(0xFFFFD600)), strokeLineWidth = 0f) {
-            moveTo(18f, 20f); lineTo(19.5f, 24f); lineTo(24f, 22f)
-            lineTo(19.5f, 20f); close()
-        }
-        path(fill = SolidColor(Color(0xFFFFD600)), strokeLineWidth = 0f) {
-            moveTo(18f, 20f); lineTo(19.5f, 16f); lineTo(24f, 22f)
-            lineTo(19.5f, 24f); close()
-        }
-        path(fill = SolidColor(Color(0xFFE040FB)), strokeLineWidth = 0f) {
-            moveTo(72f, 10f); lineTo(73.5f, 14f); lineTo(78f, 12f)
-            lineTo(73.5f, 10f); close()
-        }
-        path(fill = SolidColor(Color(0xFFE040FB)), strokeLineWidth = 0f) {
-            moveTo(72f, 10f); lineTo(73.5f, 6f); lineTo(78f, 12f)
-            lineTo(73.5f, 14f); close()
-        }
-
-        // ── Heart on disc ─────────────────────────────────────────────────────
-        path(fill = SolidColor(Color(0xFFFF1744)), strokeLineWidth = 0f) {
-            moveTo(48f, 65f)
-            curveTo(44f, 61f, 38f, 59f, 38f, 56f)
-            curveTo(38f, 53f, 41f, 52f, 44f, 54f)
-            lineTo(48f, 58f); lineTo(52f, 54f)
-            curveTo(55f, 52f, 58f, 53f, 58f, 56f)
-            curveTo(58f, 59f, 52f, 61f, 48f, 65f)
-            close()
-        }
-
     }.build()
 }

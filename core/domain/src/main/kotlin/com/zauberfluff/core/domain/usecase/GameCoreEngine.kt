@@ -24,7 +24,7 @@ class GameCoreEngine(
 
     fun drawCard(gameState: GameState, playerId: String, licenseStatus: LicenseStatus = LicenseStatus.PREMIUM): GameState {
         val player = gameState.players.find { it.id == playerId } ?: return gameState
-        // Handkartenlimit von exakt 6 Karten – bei vollem Limit wird die Aktion still abgebrochen
+        // Handkartenlimit dynamisch über MAX_HAND_SIZE – bei vollem Limit wird die Aktion still abgebrochen
         if (player.hand.size >= Player.MAX_HAND_SIZE) {
             return gameState
         }
@@ -53,6 +53,22 @@ class GameCoreEngine(
         )
     }
 
+    fun discardCard(gameState: GameState, playerId: String, cardId: String): GameState {
+        val player = gameState.players.find { it.id == playerId } ?: return gameState
+        val cardToRemove = player.hand.find { it.id == cardId } ?: return gameState
+        
+        val newHand = player.hand.toMutableList()
+        newHand.remove(cardToRemove) // Removes exactly one instance
+        val updatedPlayer = player.copy(hand = newHand.toList())
+        val updatedPlayers = gameState.players.map { if (it.id == playerId) updatedPlayer else it }
+        
+        return gameState.copy(
+            players = updatedPlayers
+        )
+    }
+
+
+
     fun completeMission(gameState: GameState, playerId: String, selectedCards: List<Card>, licenseStatus: LicenseStatus = LicenseStatus.PREMIUM): GameState {
         val player = gameState.players.find { it.id == playerId } ?: return gameState
         val mission = gameState.activeMission ?: return gameState
@@ -80,7 +96,7 @@ class GameCoreEngine(
         return if (!isWin) {
             // Wenn das Spiel nicht vorbei ist, starten wir eine neue Runde
             startNewRound(
-                gameState.copy(players = updatedPlayers), 
+                gameState.copy(players = updatedPlayers, activeMission = null), 
                 licenseStatus
             )
         } else {
@@ -97,7 +113,7 @@ class GameCoreEngine(
         // Deck neu generieren
         val newDeck = deckFactory.generateDeck(licenseStatus).shuffled(seedEngine.random).toMutableList()
 
-        // Bestehende Karten bleiben – Hand wird nur bis auf MAX_HAND_SIZE (6) aufgefüllt
+        // Bestehende Karten bleiben – Hand wird nur bis auf MAX_HAND_SIZE (5) aufgefüllt
         val updatedPlayers = gameState.players.map { player ->
             val cardsNeeded = Player.MAX_HAND_SIZE - player.hand.size
             val drawnCards = mutableListOf<Card>()
@@ -109,12 +125,16 @@ class GameCoreEngine(
             player.copy(hand = player.hand + drawnCards)
         }
 
-        // Neue Mission wählen
-        val availableMissions = Mission.getAvailableMissions(licenseStatus)
-        val newMission = if (availableMissions.isNotEmpty()) {
-            availableMissions.random(seedEngine.random)
+        // Neue Mission wählen, ABER nur wenn es noch keine aktive Mission gibt
+        val newMission = if (gameState.activeMission == null) {
+            val availableMissions = Mission.getAvailableMissions(licenseStatus)
+            if (availableMissions.isNotEmpty()) {
+                availableMissions.random(seedEngine.random)
+            } else {
+                null
+            }
         } else {
-            null
+            gameState.activeMission
         }
 
         return gameState.copy(
